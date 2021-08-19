@@ -1,0 +1,12 @@
+[Unit]
+Description=OLED display daemon for Odroid HC4
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=15
+User=root
+ExecStart=/opt/hc4-oled/displayDaemon.py
+
+[Install]
+WantedBy=multi-user.target
