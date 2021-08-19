@@ -5,9 +5,9 @@ I developed and tested this on a Odroid HC4 with Armbian Buster, kernel 5.10.57-
 
 ### Setup
 ```
-root@odroidhc4:~# sudo apt update
-root@odroidhc4:~# sudo apt install --no-install-recommends --no-install-suggests python3 python3-pip python3-dev python3-setuptools python3-wheel python3-psutil zlib1g-dev libjpeg-dev libfreetype6-dev git
-root@odroidhc4:~# sudo pip3 install luma.core luma.oled Pillow mdtstat
+root@odroidhc4:~# apt update
+root@odroidhc4:~# apt install --no-install-recommends --no-install-suggests python3 python3-pip python3-dev python3-setuptools python3-wheel python3-psutil zlib1g-dev libjpeg-dev libfreetype6-dev git
+root@odroidhc4:~# pip3 install luma.core luma.oled Pillow mdtstat
 root@odroidhc4:~# cd /opt/
 root@odroidhc4:/opt# git clone https://codeberg.org/wh0ami/hc4-oled/
 root@odroidhc4:/opt# cd hc4-oled/
