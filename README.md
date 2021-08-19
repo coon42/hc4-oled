@@ -1,6 +1,7 @@
 # hc4-oled
 
 This is a simple python3 daemon for the OLED display of the Odroid HC4. It can display some information about the operating system, the disks and some other hardware components.  
+  
 I developed and tested this on a Odroid HC4 with Armbian Buster, kernel 5.10.57-meson64 and a mdadm RAID1 consisting of two Toshiba DT01ACA300 hard disks. 
 
 ### Setup
