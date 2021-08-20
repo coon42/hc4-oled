@@ -54,7 +54,7 @@ def main():
 		for disk in raid['devices']['md0']['disks']:
 			result = '+++ Disk +++\n• '+ disk_serial[disk] +'\n• '
 			if raid['devices']['md0']['disks'][disk]['faulty']:
-				printString(result +'faulty')
+				printString(result +'! faulty !')
 			else:
 				printString(result +'not faulty')
 			sleep(pause)
