@@ -25,6 +25,15 @@ def main():
 	# initialize font
 	font = ImageFont.truetype(path.abspath(path.join(path.dirname(__file__), 'fonts', 'DejaVuSansMono.ttf')), 17)
 
+	# read serial numbers of the hard drives
+	raid = mdstat.parse()
+	disk_serial = {}
+	for disk in raid['devices']['md0']['disks']:
+		cmd = "/lib/udev/scsi_id --page=0x80 --whitelisted --device=/dev/"+ disk +" -x | awk -F'=' '/ID_SERIAL_SHORT/ {print $2;}'"
+		process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+		output, error = process.communicate()
+		disk_serial[disk] = str(output.decode('UTF-8')).strip()
+
 	# method for displaying a string on the oled display
 	def printString(string):
 		with canvas(device) as draw:
@@ -43,12 +52,7 @@ def main():
 		# iterate over all disks of md0 and request the disks serial number from the kernel
 		# each disk has a own view with its raid status (faulty or not)
 		for disk in raid['devices']['md0']['disks']:
-			cmd = "/lib/udev/scsi_id --page=0x80 --whitelisted --device=/dev/"+ disk +" -x | awk -F'=' '/ID_SERIAL_SHORT/ {print $2;}'"
-			process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-			output, error = process.communicate()
-			id = str(output.decode('UTF-8')).strip()
-
-			result = '+++ Disk +++\n• '+ id +'\n• '
+			result = '+++ Disk +++\n• '+ disk_serial[disk] +'\n• '
 			if raid['devices']['md0']['disks'][disk]['faulty']:
 				printString(result +'faulty')
 			else:
@@ -68,7 +72,11 @@ def main():
 		sleep(pause)
 
 		# print uptime
-		printString('+ Uptime +\n' + strftime("• %d days\n  and %H:%Mh", gmtime(time() - boot_time())))
+		upSeconds = int(time() - boot_time())
+		upDays = upSeconds // 86400
+		upHours = (upSeconds % 86400) // 3600
+		upMinutes = ((upSeconds % 86400) % 3600) // 60
+		printString('+ Uptime +\n• '+ str(upDays) +' days\n  and '+ str(upHours) +':'+ str(upMinutes) +'h')
 		sleep(pause)
 
 		# print cpu temperature and freq
