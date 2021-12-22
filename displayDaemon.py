@@ -75,7 +75,11 @@ def main():
 		upSeconds = int(time() - boot_time())
 		upDays = upSeconds // 86400
 		upHours = (upSeconds % 86400) // 3600
+		if upHours < 10:
+			upHours = "0" + str(upHours)
 		upMinutes = ((upSeconds % 86400) % 3600) // 60
+		if upMinutes < 10:
+			upMinutes = "0" + str(upMinutes)
 		printString('+ Uptime +\n• '+ str(upDays) +' days\n  and '+ str(upHours) +':'+ str(upMinutes) +'h')
 		sleep(pause)
 
