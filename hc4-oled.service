@@ -6,7 +6,7 @@ Type=simple
 Restart=always
 RestartSec=15
 User=root
-ExecStart=/opt/hc4-oled/displayDaemon.py
+ExecStart=/opt/hc4-oled/venv/bin/python /opt/hc4-oled/displayDaemon.py
 
 [Install]
 WantedBy=multi-user.target
