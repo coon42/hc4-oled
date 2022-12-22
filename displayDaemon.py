@@ -19,7 +19,7 @@ from luma.core.render import canvas
 from luma.oled.device import ssd1306
 from PIL import ImageFont
 
-RAID_ID = 'md0'
+RAID_ID = 'md127'
 
 def main():
 	# initialize oled display
