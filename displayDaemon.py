@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #     Dev: wh0ami
+# Modfied: coon42
 # Licence: Public Domain <https://unlicense.org>
 # Project: https://codeberg.org/wh0ami/hc4-oled/
 
@@ -18,6 +19,8 @@ from luma.core.render import canvas
 from luma.oled.device import ssd1306
 from PIL import ImageFont
 
+RAID_ID = 'md0'
+
 def main():
 	# initialize oled display
 	device = ssd1306(i2c(port=0, address=0x3C), rotate=2)
@@ -28,7 +31,7 @@ def main():
 	# read serial numbers of the hard drives
 	raid = mdstat.parse()
 	disk_serial = {}
-	for disk in raid['devices']['md0']['disks']:
+	for disk in raid['devices'][RAID_ID]['disks']:
 		cmd = "/lib/udev/scsi_id --page=0x80 --whitelisted --device=/dev/"+ disk +" -x | awk -F'=' '/ID_SERIAL_SHORT/ {print $2;}'"
 		process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 		output, error = process.communicate()
@@ -51,17 +54,17 @@ def main():
 		raid = mdstat.parse()
 		# iterate over all disks of md0 and request the disks serial number from the kernel
 		# each disk has a own view with its raid status (faulty or not)
-		for disk in raid['devices']['md0']['disks']:
+		for disk in raid['devices'][RAID_ID]['disks']:
 			result = '+++ Disk +++\n• '+ disk_serial[disk] +'\n• '
-			if raid['devices']['md0']['disks'][disk]['faulty']:
+			if raid['devices'][RAID_ID]['disks'][disk]['faulty']:
 				printString(result +'! faulty !')
 			else:
 				printString(result +'not faulty')
 			sleep(pause)
 
 		# get the current raid status and display it
-		if raid['devices']['md0']['resync'] is not None:
-			printString('+++ RAID +++\n• '+ raid['devices']['md0']['resync']['operation'] +'\n• '+ raid['devices']['md0']['resync']['progress'])
+		if raid['devices'][RAID_ID]['resync'] is not None:
+			printString('+++ RAID +++\n• '+ raid['devices'][RAID_ID]['resync']['operation'] +'\n• '+ raid['devices'][RAID_ID]['resync']['progress'])
 		else:
 			printString('+++ RAID +++\n• synced')
 		sleep(pause)
